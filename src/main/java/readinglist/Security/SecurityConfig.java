@@ -1,6 +1,7 @@
-package readinglist;
+package readinglist.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import readinglist.ReaderRepository;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -18,12 +21,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+        .headers().frameOptions().disable()
+        .and()
+        .csrf().disable()
         .authorizeRequests()
-        .antMatchers("/**").hasRole("USER")
+        .antMatchers("/h2-console/*").permitAll()
+        .anyRequest().authenticated()
         .and()
         .formLogin()
-        .loginPage("/login.html")
-        .failureUrl("/login?error=true");
+        .successHandler(myAuthenticationSuccessHandler());
   }
 
   @Override
@@ -34,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           @Override
           public UserDetails loadUserByUsername(String username)
               throws UsernameNotFoundException {
-            UserDetails userDetails = readerRepository.findById(username).get();
+            UserDetails userDetails = readerRepository.findById(username).orElse(null);
             if (userDetails != null) {
               return userDetails;
             }
@@ -43,4 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         });
   }
 
+  @Bean
+  public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+    return new MySimpleUrlAuthenticationSuccessHandler();
+  }
 }
