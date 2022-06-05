@@ -16,7 +16,7 @@ public class Book {
   private String isbn;
   private String title;
   private String author;
-  @Column(columnDefinition = "LONGTEXT")
+  @Column(columnDefinition = "NVARCHAR")
   private String description;
 
   public Long getId() {
