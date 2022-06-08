@@ -12,11 +12,11 @@ public class ReadingListApplication {
 		SpringApplication.run(ReadingListApplication.class, args);
 	}
 
-	@Bean
+/*	@Bean
 	public CommandLineRunner run(ReaderRepository repository) {
 		return (args -> {
 			repository.save(new Reader("phu", "phanlephu", "{noop}123456"));
 		});
-	}
+	}*/
 
 }
