@@ -22,6 +22,17 @@ public class Reader implements UserDetails {
   private String fullname;
   private String password;
 
+  public Reader(String username, String fullname, String password) {
+
+    this.username = username;
+    this.fullname = fullname;
+    this.password = password;
+  }
+
+  protected Reader() {
+
+  }
+
   public String getUsername() {
     return username;
   }
