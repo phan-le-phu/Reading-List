@@ -16,6 +16,9 @@ public class ReadingListController {
   @Autowired
   private ReadingListRepository readingListRepository;
 
+  @Autowired
+  private AmazonProperties amazonProperties;
+
   @RequestMapping(value="/{reader}", method=RequestMethod.GET)
   public String readersBooks(
       @PathVariable("reader") String reader,
@@ -25,6 +28,7 @@ public class ReadingListController {
 
     if (readingList != null) {
       model.addAttribute("books", readingList);
+      model.addAttribute("amazonID", amazonProperties.getAssociateID());
     }
 
     return "readingList";
